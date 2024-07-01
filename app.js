@@ -5,8 +5,11 @@ var cookieParser = require('cookie-parser');
 var expressLayouts = require('express-ejs-layouts');
 // var logger = require('morgan');
 
+const Mongodb = require('./src/apps/mongodb.init')
 
+Mongodb.connection();
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'src/views'));
