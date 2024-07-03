@@ -1,0 +1,22 @@
+<% 
+const changeOrdering = (prefixAdmin, id, ordering) => {
+    
+    let newOrdering = req.body.ordering
+    const link = `http://localhost:3000/admin/${prefixAdmin}/changeOrdering/${id}/${ordering}`;
+}
+    $.ajax({
+        type: "get",
+        url: link,
+        dataType: "json",
+        success: function () {
+            
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500
+});
+        }
+    });
+%>

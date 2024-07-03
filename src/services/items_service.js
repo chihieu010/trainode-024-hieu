@@ -1,6 +1,7 @@
 const items_model = require('../model/items_model');
 const ItemModel = require('../model/items_model')
-const IdItem = require('../../public/admin/myjs/myjs')
+const IdItem = require('../../public/admin/myjs/myjs');
+const { name } = require('ejs');
 class ItemService {
     getAll = async () => {
         let items = await ItemModel.find();
@@ -17,14 +18,22 @@ class ItemService {
         return;
     }
     delete = async (id) => {
-        const {_id} = req.params.id
         await ItemModel.findByIdAndDelete(id)
         return
     }
-    update = async (id) => {
-        const {_id} = req.params.id
-        await ItemModel.findByIdAndUpdate(id)
+    changeStatus = async (id, status) =>{    
+        await ItemModel.findByIdAndUpdate(id,{status})
         return
     }
+    changeOrdering = async (id, ordering) =>{
+        await ItemModel.findByIdAndUpdate(id, {ordering})
+        return
+    }
+    search = async (keyword) =>{
+        await ItemModel.find(name == keyword)
+        console.log(keyword);
+        return
+    }
+    
 }
 module.exports = new ItemService()

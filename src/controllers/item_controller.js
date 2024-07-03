@@ -2,7 +2,6 @@ const ItemService = require('../services/items_service')
 class ItemController {
     getAll = async (req, res, next) => {
         let items = await ItemService.getAll()
-        console.log(items);
         
         res.render('admin/pages/items', {items});
         
@@ -16,12 +15,26 @@ class ItemController {
         // res.render('admin/item/form')
     }
     delete = async (req, res, next) =>{
-        await ItemService.delete(id)
+        await ItemService.delete(req.params.id)
+        res.send({
+            success: true
+        })
+    }
+
+    changeStatus = async (req,res, next) =>{
+        let newStatus = req.params.status == 'active' ? 'inactive' : 'active'
+        await ItemService.changeStatus(req.params.id, newStatus)
         res.redirect('/admin/item')
     }
-    update = async(req, res, next) =>{
-        await ItemService.update(id)
+    changeOrdering = async(req,res,next) =>{
+        let newOrdering = req.body.ordering
+        await ItemService.changeOrdering(req.params.id, newOrdering)
         res.redirect('/admin/item')
+    }
+    search = async(req,res,next) =>{
+        let keyword = ItemService.search(req.query, 'keyword')
+        let name = req.body.name
+        res.render('admin/pages/items')
     }
 
 }
