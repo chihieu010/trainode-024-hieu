@@ -26,5 +26,52 @@ const deleteItem = (id) =>{
       });
 
 }
+const changeStatus = (prefixAdmin, id, status) => {
+    
+    let newStatus = status === 'active' ? 'inactive' : 'active';
+    const link = `http://localhost:3000/admin/${prefixAdmin}/changeStatus/${id}/${status}`;
+    console.log(link);
+    $.ajax({
+        type: "get",
+        url: link,
+        dataType: "json",
+        success: function () {
+            let color = newStatus === 'active' ? 'success' : 'danger';
+            let icon = newStatus === 'active' ? 'fa-check' : 'fa-times';
+            xhtml = `<a href="javascript:changeStatus('${prefixAdmin}','${id}','${newStatus}')" class="rounded-circle btn btn-sm btn-${color}"><i class="fas ${icon}"></i></a>`
+            $(`#status-${id}`).html(xhtml);
+            Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500
+
+});
+        }
+    });
+}
+
+
+$('.ordering').change(function (e) { 
+    e.preventDefault();
+    let id = $(this).data('id');
+    let refix = $(this).data('refix');
+    let ordering = $(this).val();
+    const link = `http://localhost:3000/admin/${prefixAdmin}/changeOrdering/${id}/${ordering}`
+    console.log(link);
+$.get(link,
+    function (data) {
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Your work has been saved",
+            showConfirmButton: false,
+            timer: 1500    
+    },
+ "json"
+);
+});
+})
 
    

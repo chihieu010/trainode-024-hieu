@@ -7,10 +7,7 @@ router.get('/form', ItemController.getForm)
 router.post('/form', ItemController.add)
 router.get('/delete/:id', ItemController.delete)
 router.get('/changeStatus/:id/:status', ItemController.changeStatus)
-router.post('/changeOrdering/:id', ItemController.changeOrdering)
-router.get('/?keyword=', ItemController.search)
-
-
+router.get('/changeOrdering/:id/:ordering', ItemController.changeOrdering)
 
 module.exports = router;
 

@@ -1,10 +1,15 @@
 const items_model = require('../model/items_model');
 const ItemModel = require('../model/items_model')
-const IdItem = require('../../public/admin/myjs/myjs');
 const { name } = require('ejs');
 class ItemService {
-    getAll = async () => {
-        let items = await ItemModel.find();
+    getAll = async (obj , params) => {
+        const { page = 1, limit = 5 } = params
+        let items = await ItemModel.find(obj)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            // .sort({ createdAt: -1 })
+            // .select()
+            // .lean()
         return items;
     }
     add = async (params) => {
@@ -25,13 +30,12 @@ class ItemService {
         await ItemModel.findByIdAndUpdate(id,{status})
         return
     }
-    changeOrdering = async (id, ordering) =>{
+    changeOrdering = async ({ id , ordering }) => {
         await ItemModel.findByIdAndUpdate(id, {ordering})
         return
     }
-    search = async (keyword) =>{
-        await ItemModel.find(name == keyword)
-        console.log(keyword);
+    count = async (params) =>{
+        return await ItemModel.countDocuments(params)
         return
     }
     

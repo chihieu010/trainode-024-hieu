@@ -17,21 +17,14 @@
 		<div class="row justify-content-between">
 			<div class="mb-1">
 				<div class="btn-search">
-					<a href="#">
-						<button type="button" class="btn btn-info ${items.class}">
-							All (<span>0</span>)
-						</button>
-					</a>
-					<a href="#">
-						<button type="button" class="btn btn-info ${items.class}">
-							Active (<span>0</span>)
-						</button>
-					</a>
-					<a href="#">
-						<button type="button" class="btn btn-info ${items.class}">
-							Inactive (<span>0</span>)
-						</button>
-					</a>
+					<% listStatus.forEach( (item, index) => {  %>
+						<a href="<%= item.link %>">
+							<button type="button" class="btn btn-<%= item.color %>">
+								<%= item.name %> (<span><%= item.count %></span>)
+							</button>
+						</a>
+					<% }) %>
+					
 				</div>
 				
 			</div>
@@ -42,7 +35,7 @@
 						<input type="text" class="form-control form-control-sm" name="keyword" value="" placeholder="Search for..." style="min-width: 300px">
 						<div class="input-group-append">
 							<a type="button" class="btn btn-sm btn-danger"  href="#">Clear</a>
-							<button type="submit" class="btn btn-sm btn-info" id="btn-search" value="<%= keyword %>">Search</button>
+							<button type="submit" class="btn btn-sm btn-info" id="btn-search" value="">Search</button>
 						</div>
 					</div>
 				</form>
@@ -115,16 +108,16 @@
 						<!-- tach 1 funcion -->
 						<% if(item.status == 'active'){%>
 							
-						<td class="text-center position-relative">
-							<a href="/admin/item/changeStatus/<%= item._id %>/<%= item.status %>" class="rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></a>
+						<td class="text-center position-relative" id="changestatus">
+							<a href="javascript:changeStatus('<%= item._id %>','<%= item.status %>')" class="rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></a>
 						</td>
 						<% }else{ %>
 							<td class="text-center position-relative">
-								<a href="/admin/item/changeStatus/<%= item._id %>/<%= item.status %>" class="rounded-circle btn btn-sm btn-danger"><i class="fas fa-minus"></i></a>
+								<a href="javascript:changeStatus('<%= linkPrefix %>','<%= item._id %>','<%= item.status %>')" class="rounded-circle btn btn-sm btn-danger"><i class="fas fa-minus"></i></a>
 							</td>	
 						<% } %>
 						<td class="text-center position-relative" >
-							<input type="number" name="items-ordering" value="<%= item.ordering %>" class="text-center ordering">
+							<input type="number" name="items-ordering" value="<%= item.ordering %>" class="text-center ordering" data-id="<%= item._id %>">
 						</td>
 
 						<td class="text-center">

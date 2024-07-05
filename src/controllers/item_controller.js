@@ -1,9 +1,41 @@
 const ItemService = require('../services/items_service')
 class ItemController {
     getAll = async (req, res, next) => {
-        let items = await ItemService.getAll()
+        const { keyword , status , page } = req.query;
+        let obj = {}
+
+        if (keyword) {
+            obj.name = keyword
+        }
+        if (status && ( status == 'active' || status == 'inactive' )) {
+            obj.status = status
+        }
+
+        let listStatus = [
+            {
+                name: 'All',
+                count: await ItemService.count({}),
+                link: '/admin/item?status=all',
+                color : status == 'active' || status == 'inactive' ? 'info' : 'warning'
+            },
+            {
+                name: 'Active',
+                count: await ItemService.count({status : 'active'}),
+                link: '/admin/item?status=active',
+                color : status && status == 'active' ? 'warning' : 'info',
+            },
+            {
+                name: 'Inactive',
+                count: await ItemService.count({status : 'inactive'}),
+                link: '/admin/item?status=inactive',
+                color : status && status == 'inactive' ? 'warning' : 'info',
+            },
+           
+        ]
+
+        let items = await ItemService.getAll(obj , req.query)
         
-        res.render('admin/pages/items', {items});
+        res.render('admin/pages/items', {items , listStatus});
         
     }
     getForm = (req, res, next) => {
@@ -24,17 +56,11 @@ class ItemController {
     changeStatus = async (req,res, next) =>{
         let newStatus = req.params.status == 'active' ? 'inactive' : 'active'
         await ItemService.changeStatus(req.params.id, newStatus)
-        res.redirect('/admin/item')
+        res.send({})
     }
     changeOrdering = async(req,res,next) =>{
-        let newOrdering = req.body.ordering
-        await ItemService.changeOrdering(req.params.id, newOrdering)
-        res.redirect('/admin/item')
-    }
-    search = async(req,res,next) =>{
-        let keyword = ItemService.search(req.query, 'keyword')
-        let name = req.body.name
-        res.render('admin/pages/items')
+        await ItemService.changeOrdering(req.params)
+        res.send({})
     }
 
 }
