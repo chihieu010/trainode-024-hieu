@@ -3,12 +3,23 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var expressLayouts = require('express-ejs-layouts');
+var session = require('express-session')
+var flash = require('express-flash-notification')
+var cookieParser = require('cookie-parser')
 // var logger = require('morgan');
 
 const Mongodb = require('./src/apps/mongodb.init')
 
 Mongodb.connection();
 var app = express();
+app.use(cookieParser());
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
+app.use(flash());
 
 
 // view engine setup
@@ -16,6 +27,7 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 app.set('layout', 'admin')
+
 
 // app.use(logger('dev'));
 app.use(express.json());

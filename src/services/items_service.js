@@ -3,7 +3,7 @@ const ItemModel = require('../model/items_model')
 const { name } = require('ejs');
 class ItemService {
     getAll = async (obj , params) => {
-        const { page = 1, limit = 5 } = params
+        const { page = 1, limit = 10 } = params
         let items = await ItemModel.find(obj)
             .skip((page - 1) * limit)
             .limit(limit)
@@ -13,15 +13,28 @@ class ItemService {
         return items;
     }
     add = async (params) => {
-        const {name, status, ordering} = params
-        await ItemModel.create({
+        try {
+            const {name, status, ordering} = params
+            await ItemModel.create({
             name,
             status,
             ordering
         })
 
         return;
+        } catch (error) {
+            let err = error['errors']
+            for(let key in err){
+                err[key] = err[key].message
+            }
+            throw err
+        }
+        
     }
+    findByIdAndUpdate = async (id, body) =>{
+        return await ItemModel.findByIdAndUpdate(id,body)
+    }
+    
     delete = async (id) => {
         await ItemModel.findByIdAndDelete(id)
         return
@@ -37,6 +50,10 @@ class ItemService {
     count = async (params) =>{
         return await ItemModel.countDocuments(params)
         return
+    }
+    findbyId = async(id) =>{
+      return await ItemModel.findById(id)
+        
     }
     
 }

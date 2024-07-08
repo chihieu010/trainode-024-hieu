@@ -37,7 +37,7 @@ const changeStatus = (prefixAdmin, id, status) => {
         dataType: "json",
         success: function () {
             let color = newStatus === 'active' ? 'success' : 'danger';
-            let icon = newStatus === 'active' ? 'fa-check' : 'fa-times';
+            let icon = newStatus === 'active' ? 'fa-check' : 'fa-minus';
             xhtml = `<a href="javascript:changeStatus('${prefixAdmin}','${id}','${newStatus}')" class="rounded-circle btn btn-sm btn-${color}"><i class="fas ${icon}"></i></a>`
             $(`#status-${id}`).html(xhtml);
             Swal.fire({

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
+const slugify = require('slugify');
+
 
 const Itemdocument = 'item'
 const ItemCollection = 'items'
@@ -7,17 +9,35 @@ const ItemCollection = 'items'
 const itemsSchema = new Schema({
   name : {
     type : String,
+    minLength : [5, '{VALUE} nho hon 5 ki tu']
+
   },
+  slug : String,
   status : {
     type : String,
-    enum : ['active', 'inactive'],
-    default : 'inactive'
+    enum : {
+      values: ['active', 'inactive'],
+      message: '{VALUE} is active or inactive'
+    }
   },
-  ordering : Number,
+  ordering : {
+    type : Number,
+    min : [1, 'so qua nho'],
+    max : [100, 'so qua lon']
+  },
+  image : {
+ 
+  }
 },
 {
     timestamps : true,
     collection : ItemCollection
 }
 );
+
+itemsSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
+
 module.exports = mongoose.model(Itemdocument, itemsSchema)

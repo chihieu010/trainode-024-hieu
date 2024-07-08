@@ -38,13 +38,44 @@ class ItemController {
         res.render('admin/pages/items', {items , listStatus});
         
     }
-    getForm = (req, res, next) => {
-        res.render('admin/pages/items/form');
+    getForm = async (req, res, next) => {
+        let {id} = req.params
+
+        if(id){
+            const item = await ItemService.findbyId(id)
+            res.render('admin/pages/items/form',{
+                title : 'Edit',
+                item : item
+            
+            });
+        }else{
+            res.render('admin/pages/items/form',{
+                title : 'Add-form',
+                item : {}
+            });
+        }
+        
     }
     add = async (req, res, next) =>{
-        await ItemService.add(req.body)
-        res.redirect('/admin/item')
-        // res.render('admin/item/form')
+        try {
+            let {id} = req.body
+            if(id){
+                await ItemService.findByIdAndUpdate(id,req.body)
+                req.flash('info', 'cap nhat thanh cong', false);
+                res.redirect('/admin/item') 
+            }else{
+                await ItemService.add(req.body)
+                req.flash('info', 'them moi thanh cong', false);
+                res.redirect('/admin/item')
+        }    
+        } catch (error) {
+            req.flash('info', 'err', false);
+            res.redirect('/admin/item.form')
+        }
+        
+        
+
+        
     }
     delete = async (req, res, next) =>{
         await ItemService.delete(req.params.id)

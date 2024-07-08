@@ -12,6 +12,7 @@
 		<div class="card-tools">
 			<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse"><i class="fas fa-minus"></i></button>
 		</div>
+		<h3><%- locals.flash %></h3>
 	</div>
 	<div class="card-body">
 		<div class="row justify-content-between">
@@ -108,11 +109,11 @@
 						<!-- tach 1 funcion -->
 						<% if(item.status == 'active'){%>
 							
-						<td class="text-center position-relative" id="changestatus">
-							<a href="javascript:changeStatus('<%= item._id %>','<%= item.status %>')" class="rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></a>
+						<td class="text-center position-relative" id="status-<%= item._id %>">
+							<a href="javascript:changeStatus('<%= linkPrefix %>','<%= item._id %>','<%= item.status %>')" class="rounded-circle btn btn-sm btn-success"><i class="fas fa-check"></i></a>
 						</td>
 						<% }else{ %>
-							<td class="text-center position-relative">
+							<td class="text-center position-relative " id="status-<%= item._id %>">
 								<a href="javascript:changeStatus('<%= linkPrefix %>','<%= item._id %>','<%= item.status %>')" class="rounded-circle btn btn-sm btn-danger"><i class="fas fa-minus"></i></a>
 							</td>	
 						<% } %>
@@ -121,7 +122,7 @@
 						</td>
 
 						<td class="text-center">
-							<a href="javascript:updateItem('<%= item._id %>')" class="rounded-circle btn btn-sm btn-info " title="Edit">
+							<a href="<%= linkPrefix %>/form/<%= item._id %>" class="rounded-circle btn btn-sm btn-info " title="Edit">
 								<i class="fas fa-pencil-alt"></i>
 							</a>
          
