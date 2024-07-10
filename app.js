@@ -9,6 +9,7 @@ var cookieParser = require('cookie-parser')
 // var logger = require('morgan');
 
 const Mongodb = require('./src/apps/mongodb.init')
+const apiItemRouter = require('./src/routes/api/v1/api_item_router');
 
 Mongodb.connection();
 var app = express();
@@ -36,6 +37,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./src/routes'));
+app.use('/api/v1', apiItemRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -12,6 +12,8 @@ class ItemService {
             // .lean()
         return items;
     }
+  
+
     add = async (params) => {
         try {
             const {name, status, ordering} = params
@@ -31,14 +33,8 @@ class ItemService {
         }
         
     }
-    findByIdAndUpdate = async (id, body) =>{
-        return await ItemModel.findByIdAndUpdate(id,body)
-    }
     
-    delete = async (id) => {
-        await ItemModel.findByIdAndDelete(id)
-        return
-    }
+    
     changeStatus = async (id, status) =>{    
         await ItemModel.findByIdAndUpdate(id,{status})
         return
@@ -49,12 +45,28 @@ class ItemService {
     }
     count = async (params) =>{
         return await ItemModel.countDocuments(params)
-        return
+        
     }
+
+    getAllApi = async(params) => {
+        return await ItemModel.find(params)
+    }
+
     findbyId = async(id) =>{
+        console.log(id);
       return await ItemModel.findById(id)
         
     }
+
+    delete = async (id) => {
+        await ItemModel.findByIdAndDelete(id)
+        return
+    }
+
+    updateApi = async (id, body) =>{
+        return await ItemModel.findByIdAndUpdate(id, body)
+    }
+    
     
 }
 module.exports = new ItemService()

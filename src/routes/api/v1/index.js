@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-router.use('/admin', require('./backend'))
-router.use('/api/v1', require('./api/v1'))
+router.use('/item', require('./api_item_router'))
+
+
+
 
 module.exports = router;
 

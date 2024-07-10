@@ -1,3 +1,4 @@
+const items_service = require('../services/items_service');
 const ItemService = require('../services/items_service')
 class ItemController {
     getAll = async (req, res, next) => {
@@ -57,21 +58,23 @@ class ItemController {
         
     }
     add = async (req, res, next) =>{
-        try {
-            let {id} = req.body
-            if(id){
-                await ItemService.findByIdAndUpdate(id,req.body)
-                req.flash('info', 'cap nhat thanh cong', false);
-                res.redirect('/admin/item') 
-            }else{
-                await ItemService.add(req.body)
-                req.flash('info', 'them moi thanh cong', false);
-                res.redirect('/admin/item')
-        }    
-        } catch (error) {
-            req.flash('info', 'err', false);
-            res.redirect('/admin/item.form')
-        }
+        console.log(req.file)
+        res.send({});
+        // try {
+        //     let {id} = req.body
+        //     if(id){
+        //         await ItemService.findByIdAndUpdate(id,req.body)
+        //         req.flash('info', 'cap nhat thanh cong', false);
+        //         res.redirect('/admin/item') 
+        //     }else{
+        //         await ItemService.add(req.body)
+        //         req.flash('info', 'them moi thanh cong', false);
+        //         res.redirect('/admin/item')
+        // }    
+        // } catch (error) {
+        //     req.flash('info', 'err', false);
+        //     res.redirect('/admin/item/form')
+        // }
         
         
 
@@ -94,7 +97,44 @@ class ItemController {
         res.send({})
     }
 
-}
+    getAllApi = async(req, res, next) =>{
+        console.log(req.query);
+        let items = await ItemService.getAllApi(req.query)
+        res.status(200).json({
+                message : 'lay thanh cong',
+                data : item
+            })
+    }
+    getOneApi = async(req, res, next) =>{
+        console.log(req.params.id);
+        let item = await ItemService.findbyId(req.params.id)
+        res.status(200).json({
+            message : 'lay thanh cong',
+            data : item
+        })
 
+    }
+    addApi = async(req, res, next) => {
+        console.log(req.body);
+        let item = await ItemService.add(req.body)
+        res.status(200).json({
+            message : 'them thanh cong',
+            data : item
+        })
+    }
+
+    deleteApi = async(req, res, next) => {
+        console.log(req.params.id);
+        let item = await ItemService.delete(req.params.id)
+        res.status(200).json({
+            message : 'delete thanh cong',
+            data : item
+        })
+    }
+    updateApi = async(req, res, next) => {
+        await ItemService.updateApi(req.params.id, req.body)
+    }
+
+}
 
 module.exports = new ItemController();
