@@ -2,69 +2,77 @@ const items_model = require('../model/items_model');
 const ItemModel = require('../model/items_model')
 const { name } = require('ejs');
 class ItemService {
-    getAll = async (obj , params) => {
-        const { page = 1, limit = 10 } = params
-        let items = await ItemModel.find(obj)
-            .skip((page - 1) * limit)
+    
+    getAllApi = async({page = 1, limit = 10 , sort = 'createdAt' , sortBy = 'desc' , ...params}) => {
+
+        const skip = (page - 1) * limit
+        const sortObj = {}
+        sortObj[sort] = sortBy
+
+
+        const { select } = params
+
+        const items = await ItemModel.find({})
+            .sort(sortObj)
+            .skip(skip)
             .limit(limit)
-            // .sort({ createdAt: -1 })
-            // .select()
-            // .lean()
-        return items;
-    }
-  
+            .select() //select.split(',')
+            .lean()
 
-    add = async (params) => {
+        return items
+    }
+    
+    add = async ({name, status, ordering}) => {
         try {
-            const {name, status, ordering} = params
-            await ItemModel.create({
-            name,
-            status,
-            ordering
-        })
-
-        return;
-        } catch (error) {
-            let err = error['errors']
-            for(let key in err){
-                err[key] = err[key].message
-            }
-            throw err
-        }
+            return await ItemModel.create({
+                name,
+                status,
+                ordering
+            })
+           } catch (error) {
+            throw error
+            message : 'them that bai'
+                // let err = error['errors']
+                // for(let key in err){
+                //     err[key] = err[key].message
+                // }
+                // error['status'] = 201
+                // error['message'] = err
+                // throw error
+           }
+           
         
     }
     
-    
-    changeStatus = async (id, status) =>{    
-        await ItemModel.findByIdAndUpdate(id,{status})
-        return
-    }
-    changeOrdering = async ({ id , ordering }) => {
-        await ItemModel.findByIdAndUpdate(id, {ordering})
-        return
-    }
-    count = async (params) =>{
-        return await ItemModel.countDocuments(params)
-        
-    }
-
-    getAllApi = async(params) => {
-        return await ItemModel.find(params)
-    }
-
     findbyId = async(id) =>{
-        console.log(id);
-      return await ItemModel.findById(id)
+        try {
+            return await ItemModel.findById(id)
+        } catch (error) {
+        throw error
+            message : 'khong tim thay id'
+        }
+      
         
     }
 
     delete = async (id) => {
-        await ItemModel.findByIdAndDelete(id)
-        return
+        try {
+            return await ItemModel.findByIdAndDelete(id)
+        } catch (error) {
+            throw error
+            message : 'xoa that bai'
+        }
+          
     }
 
-    updateApi = async (id, body) =>{
-        return await ItemModel.findByIdAndUpdate(id, body)
+    updateApi = async ({id}, {name, status, ordering}) =>{
+        try {
+            return await ItemModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
+        } catch (error) {
+            throw error
+
+        }
+        
     }
     
     

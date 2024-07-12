@@ -12,7 +12,7 @@ const itemsSchema = new Schema({
     minLength : [5, '{VALUE} nho hon 5 ki tu']
 
   },
-  slug : String,
+  // slug : String,
   status : {
     type : String,
     enum : {
@@ -35,9 +35,9 @@ const itemsSchema = new Schema({
 }
 );
 
-itemsSchema.pre('save', function(next) {
-  this.slug = slugify(this.name, { lower: true });
-  next();
-});
+// itemsSchema.pre('save', function(next) {
+//   this.slug = slugify(this.name, { lower: true });
+//   next();
+// });
 
 module.exports = mongoose.model(Itemdocument, itemsSchema)
