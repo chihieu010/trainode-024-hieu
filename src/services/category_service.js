@@ -1,7 +1,6 @@
-const category_model = require('../model/category_model');
-const items_model = require('../model/items_model');
-const ItemModel = require('../model/items_model')
-class ItemService {
+
+const CategoryModel = require('../model/category_model')
+class CategoryService {
     
     getAllApi = async({page = 1, limit = 10 , sort = 'createdAt' , sortBy = 'desc' , ...params}) => {
 
@@ -12,7 +11,7 @@ class ItemService {
 
         const { select } = params
 
-        const items = await ItemModel.find({})
+        const items = await CategoryModel.find({})
             .sort(sortObj)
             .skip(skip)
             .limit(limit)
@@ -22,22 +21,16 @@ class ItemService {
         return items
     }
     
-    add = async ({name, status, ordering , category_id}) => {
+    add = async ({name, status, ordering}) => {
         try {
-            let item =  await ItemModel.create({
+            return await CategoryModel.create({
                 name,
                 status,
-                ordering,
-                category_id
+                ordering
             })
-            await category_model.findByIdAndUpdate(category_id, {
-                $push:{
-                    item : item.id
-                }
-            })
-            return item
            } catch (error) {
             throw error
+            message : 'them that bai'
                 let err = error['errors']
                 for(let key in err){
                     err[key] = err[key].message
@@ -52,7 +45,8 @@ class ItemService {
     
     findbyId = async(id) =>{
         try {
-            return await ItemModel.findById(id)
+            return await CategoryModel.findById(id)
+            .populate('item')
         } catch (error) {
         throw error
             message : 'khong tim thay id'
@@ -63,7 +57,7 @@ class ItemService {
 
     delete = async (id) => {
         try {
-            return await ItemModel.findByIdAndDelete(id)
+            return await CategoryModel.findByIdAndDelete(id)
         } catch (error) {
             throw error
             message : 'xoa that bai'
@@ -73,7 +67,7 @@ class ItemService {
 
     updateApi = async ({id}, {name, status, ordering}) =>{
         try {
-            return await ItemModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
+            return await CategoryModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
         } catch (error) {
             throw error
 
@@ -83,4 +77,4 @@ class ItemService {
     
     
 }
-module.exports = new ItemService()
+module.exports = new CategoryService()

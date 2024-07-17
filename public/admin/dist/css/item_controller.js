@@ -29,7 +29,7 @@ class ItemController {
     
 
     deleteApi = async(req, res, next) => {
-    
+        console.log(req.params.id);
         let item = await ItemService.delete(req.params.id)
         res.status(200).json({
             message : 'delete thanh cong',

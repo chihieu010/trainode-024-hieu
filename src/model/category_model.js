@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 const slugify = require('slugify');
 
 
-const Itemdocument = 'item'
-const ItemCollection = 'items'
+const Itemdocument = 'category'
+const ItemCollection = 'categories'
 
 const itemsSchema = new Schema({
   name : {
@@ -12,11 +12,13 @@ const itemsSchema = new Schema({
     minLength : [5, '{VALUE} nho hon 5 ki tu']
 
   },
-  id_category : {
-    type: Schema.Types.ObjectId,
-    ref : 'category'
-  },
-  // slug : String,
+  item : [{
+    type : Schema.Types.ObjectId,
+    ref : 'item'
+  }
+
+  ],
+  slug : String,
   status : {
     type : String,
     enum : {
@@ -39,9 +41,9 @@ const itemsSchema = new Schema({
 }
 );
 
-// itemsSchema.pre('save', function(next) {
-//   this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+itemsSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
 module.exports = mongoose.model(Itemdocument, itemsSchema)
