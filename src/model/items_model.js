@@ -16,7 +16,7 @@ const itemsSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref : 'category'
   },
-  // slug : String,
+  slug : String,
   status : {
     type : String,
     enum : {
@@ -30,7 +30,7 @@ const itemsSchema = new Schema({
     max : [100, 'so qua lon']
   },
   image : {
- 
+    type : String
   }
 },
 {
@@ -39,9 +39,9 @@ const itemsSchema = new Schema({
 }
 );
 
-// itemsSchema.pre('save', function(next) {
-//   this.slug = slugify(this.name, { lower: true });
-//   next();
-// });
+itemsSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 
 module.exports = mongoose.model(Itemdocument, itemsSchema)

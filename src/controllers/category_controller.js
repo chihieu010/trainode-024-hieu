@@ -1,41 +1,46 @@
 const CategoryService = require('../services/category_service')
+const { NOTFOUND_ERROR } = require('../apps/core/error_response')
+const { OK_SUCCESS } = require('../apps/core/success_response')
 class ItemController {
     
     getAllApi = async(req, res, next) =>{
-        console.log(req.query);
         let items = await CategoryService.getAllApi(req.query)
-        res.status(200).json({
-                message : 'lay thanh cong',
-                data : items
-            })
+        new OK_SUCCESS ({
+            message : 'lay tat ca thanh cong',
+            meataData : items
+    }).send(res)
     }
-    getOneApi = async(req, res, next) =>{
-        console.log(req.params.id);
-        let item = await CategoryService.findbyId(req.params.id)
-        res.status(200).json({
-            message : 'lay thanh cong',
-            data : item
-        })
 
+    getOneApi = async(req, res, next) =>{
+        let item = await CategoryService.findbyId(req.params.id)
+        new OK_SUCCESS ({
+            message : 'lay thanh cong',
+            meataData : item
+    }).send(res)
     }
+
     addApi = async(req, res, next) => {
             let item = await CategoryService.add(req.body)
-            res.status(200).json({
-            message : 'them thanh cong',
-            data : item
-        })
+            new OK_SUCCESS ({
+                message : 'them thanh cong',
+                meataData : item
+        }).send(res)
     }
     
 
     deleteApi = async(req, res, next) => {
-        console.log(req.params.id);
-        let item = await CategoryService.delete(req.params.id)
-        res.status(200).json({
-            message : 'delete thanh cong',
-            data : item
-        })
+        let item = await CategoryService.findbyId(req.params.id)
+        if(!item) throw new Error('not find with id')
+        await CategoryService.delete(req.params.id)
+        new OK_SUCCESS ({
+            message : 'xoa thanh cong',
+            meataData : item
+    }).send(res)
     }
+
     updateApi = async(req, res, next) => {
+        let item = await CategoryService.findbyId(req.params.id)
+        if(!item) throw new Error('not find with id')
         await CategoryService.updateApi(req.params, req.body)
         res.status(200).json({
             message : 'update thanh cong',

@@ -6,6 +6,7 @@ var expressLayouts = require('express-ejs-layouts');
 var session = require('express-session')
 var flash = require('express-flash-notification')
 var cookieParser = require('cookie-parser')
+const mongoose = require('mongoose')
 // var logger = require('morgan');
 
 const Mongodb = require('./src/apps/mongodb.init')
@@ -42,6 +43,17 @@ app.use('/api/v1', apiItemRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+});
+
+app.use(function(err , req, res, next) {
+  if(err instanceof mongoose.Error.ValidationError){
+    const e = {}
+    for(let key in err.errors){
+      e[key] = err.errors[key].message
+    }
+    return res.status(400).json(e)
+  }
+  next(err)
 });
 
 // error handler

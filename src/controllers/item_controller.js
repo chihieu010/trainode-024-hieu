@@ -1,48 +1,66 @@
 const items_service = require('../services/items_service');
 const ItemService = require('../services/items_service')
+const { NOTFOUND_ERROR } = require('../apps/core/error_response')
+const { OK_SUCCESS } = require('../apps/core/success_response')
+
+
 class ItemController {
     
     getAllApi = async(req, res, next) =>{
-        console.log(req.query);
         let items = await ItemService.getAllApi(req.query)
-        res.status(200).json({
-                message : 'lay thanh cong',
-                data : items
-            })
+        new OK_SUCCESS ({
+            message : 'lay tat ca thanh cong',
+            meataData : items
+    }).send(res)
     }
-    getOneApi = async(req, res, next) =>{
-        console.log(req.params.id);
-        let item = await ItemService.findbyId(req.params.id)
-        res.status(200).json({
-            message : 'lay thanh cong',
-            data : item
-        })
 
+    getOneApi = async(req, res, next) =>{
+        let item = await ItemService.findbyId(req.params.id)
+        if(!item) throw new NOTFOUND_ERROR()
+        new OK_SUCCESS ({
+            message : 'lay thanh cong',
+            meataData : item
+    }).send(res)
     }
+
     addApi = async(req, res, next) => {
             let item = await ItemService.add(req.body)
-            res.status(200).json({
-            message : 'them thanh cong',
-            data : item
-        })
+            new OK_SUCCESS ({
+                message : 'them thanh cong',
+                meataData : item
+        }).send(res)
     }
-    
 
     deleteApi = async(req, res, next) => {
-    
-        let item = await ItemService.delete(req.params.id)
-        res.status(200).json({
-            message : 'delete thanh cong',
-            data : item
-        })
+        let item = await ItemService.findbyId(req.params.id)
+        if(!item) throw new Error('not find with id')
+        await ItemService.delete(req.params.id)
+            new OK_SUCCESS ({
+                message : 'xoa thanh cong',
+                meataData : item
+        }).send(res)
     }
+
     updateApi = async(req, res, next) => {
+        let item = await ItemService.findbyId(req.params.id)
+        if(!item) throw new Error('not find with id')
         await ItemService.updateApi(req.params, req.body)
-        res.status(200).json({
-            message : 'update thanh cong',
-        })
+        new OK_SUCCESS ({
+            message : 'cap nhat thanh cong',
+            meataData : item
+    }).send(res)
     }
+
+    uploadImage = async(req, res, next) => {
+        let item = await ItemService.findbyId(req.params.id)
+        if(!item) throw new Error('not find with id')
+
+        await ItemService.uploadImage(req.params, req.body)
+        new OK_SUCCESS ({
+            message : 'upload anh thanh cong',
+            meataData : item
+    }).send(res)
+    }   
 
 }
-
 module.exports = new ItemController();

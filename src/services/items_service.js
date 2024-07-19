@@ -1,6 +1,8 @@
 const category_model = require('../model/category_model');
 const items_model = require('../model/items_model');
 const ItemModel = require('../model/items_model')
+const multer  = require('multer')
+
 class ItemService {
     
     getAllApi = async({page = 1, limit = 10 , sort = 'createdAt' , sortBy = 'desc' , ...params}) => {
@@ -23,63 +25,53 @@ class ItemService {
     }
     
     add = async ({name, status, ordering , category_id}) => {
-        try {
-            let item =  await ItemModel.create({
-                name,
-                status,
-                ordering,
-                category_id
-            })
-            await category_model.findByIdAndUpdate(category_id, {
-                $push:{
-                    item : item.id
-                }
-            })
-            return item
-           } catch (error) {
-            throw error
-                let err = error['errors']
-                for(let key in err){
-                    err[key] = err[key].message
-                }
-                error['status'] = 201
-                error['message'] = err
-                throw error
-           }
+        let item =  await ItemModel.create({
+            name,
+            status,
+            ordering,
+            category_id
+        })
+        await category_model.findByIdAndUpdate(category_id, {
+            $push:{
+                item : item.id
+            }
+        })
+        return item
            
         
     }
     
     findbyId = async(id) =>{
-        try {
-            return await ItemModel.findById(id)
-        } catch (error) {
-        throw error
-            message : 'khong tim thay id'
-        }
+        return await ItemModel.findById(id)
       
         
     }
 
     delete = async (id) => {
-        try {
-            return await ItemModel.findByIdAndDelete(id)
-        } catch (error) {
-            throw error
-            message : 'xoa that bai'
-        }
+        return await ItemModel.findByIdAndDelete(id)
           
     }
 
     updateApi = async ({id}, {name, status, ordering}) =>{
-        try {
-            return await ItemModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
-        } catch (error) {
-            throw error
-
-        }
+        return await ItemModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
         
     }
+
+    uploadImage = async({id}, {image}) =>{
+        
+        const storage = multer.diskStorage({
+            destination: function (req, file, cb) {
+              cb(null, '/uploads')
+            },
+            filename: function (req, file, cb) {
+              const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+              cb(null, file.fieldname + '-' + uniqueSuffix)
+            }
+          })
+          
+          const upload = multer({ storage: storage })
+    }
+    
     
     
 }

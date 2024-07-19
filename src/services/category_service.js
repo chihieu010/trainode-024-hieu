@@ -22,56 +22,29 @@ class CategoryService {
     }
     
     add = async ({name, status, ordering}) => {
-        try {
-            return await CategoryModel.create({
-                name,
-                status,
-                ordering
-            })
-           } catch (error) {
-            throw error
-            message : 'them that bai'
-                let err = error['errors']
-                for(let key in err){
-                    err[key] = err[key].message
-                }
-                error['status'] = 201
-                error['message'] = err
-                throw error
-           }
-           
-        
+        let item =  await ItemModel.create({
+            name,
+            status,
+            ordering,
+            item_id
+        })
+        return item
     }
     
     findbyId = async(id) =>{
-        try {
-            return await CategoryModel.findById(id)
+        return await CategoryModel.findById(id)
             .populate('item')
-        } catch (error) {
-        throw error
-            message : 'khong tim thay id'
-        }
       
         
     }
 
     delete = async (id) => {
-        try {
-            return await CategoryModel.findByIdAndDelete(id)
-        } catch (error) {
-            throw error
-            message : 'xoa that bai'
-        }
+        return await CategoryModel.findByIdAndDelete(id)
           
     }
 
     updateApi = async ({id}, {name, status, ordering}) =>{
-        try {
-            return await CategoryModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
-        } catch (error) {
-            throw error
-
-        }
+        return await CategoryModel.findByIdAndUpdate(id, {name, status, ordering}, { runValidators : true})
         
     }
     
