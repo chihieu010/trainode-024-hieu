@@ -2,6 +2,7 @@ const items_service = require('../services/items_service');
 const ItemService = require('../services/items_service')
 const { NOTFOUND_ERROR } = require('../apps/core/error_response')
 const { OK_SUCCESS } = require('../apps/core/success_response')
+const fs = require('node:fs/promises')
 
 
 class ItemController {
@@ -54,11 +55,13 @@ class ItemController {
     uploadImage = async(req, res, next) => {
         let item = await ItemService.findbyId(req.params.id)
         if(!item) throw new Error('not find with id')
+        const image = req.file
+        console.log(req.file);
 
-        await ItemService.uploadImage(req.params, req.body)
+        await ItemService.uploadImage(req.params, req.file)
         new OK_SUCCESS ({
             message : 'upload anh thanh cong',
-            meataData : item
+            meataData : image
     }).send(res)
     }   
 

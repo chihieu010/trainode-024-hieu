@@ -7,6 +7,7 @@ var session = require('express-session')
 var flash = require('express-flash-notification')
 var cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
+var fileUpload = require('express-fileupload')
 // var logger = require('morgan');
 
 const Mongodb = require('./src/apps/mongodb.init')
@@ -23,6 +24,8 @@ app.use(session({
 }))
 app.use(flash());
 
+__uploadImg = __dirname + '/public/image/'
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'src/views'));
@@ -36,6 +39,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// app.use(fileUpload({
+//   useTempFiles : true,
+//   tempFileDir : path.join(__dirname, '/public/image')
+// }));
 
 app.use('/', require('./src/routes'));
 app.use('/api/v1', apiItemRouter);

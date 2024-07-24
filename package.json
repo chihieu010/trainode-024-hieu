@@ -7,12 +7,15 @@
     "start:dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@gonetone/get-youtube-id-by-url": "^2.0.0",
+    "axios": "^1.7.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "express-ejs-layouts": "^2.5.1",
+    "express-fileupload": "^1.5.1",
     "express-flash-notification": "^0.5.0",
     "express-session": "^1.18.0",
     "flash": "^1.1.0",

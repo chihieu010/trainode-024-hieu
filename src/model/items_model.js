@@ -29,7 +29,7 @@ const itemsSchema = new Schema({
     min : [1, 'so qua nho'],
     max : [100, 'so qua lon']
   },
-  image : {
+  avatar : {
     type : String
   }
 },
