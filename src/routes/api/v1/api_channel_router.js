@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const youtubeController = require('../../../controllers/youtube_controller');
+const ChannelController = require('../../../controllers/channel_controller');
 const {asyncHandle} = require('../../../apps/utils/asyncHandle')
 
-router.get('/',asyncHandle(youtubeController.getAllApi))
+router.get('/order',asyncHandle(ChannelController.order))
+router.delete('/',asyncHandle(ChannelController.deleteChannel))
 
 module.exports = router;

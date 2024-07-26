@@ -9,10 +9,6 @@ const ItemCollection = 'channels'
 const channelSchema = new Schema({
   linkOder : String,
   uidChannel : String,
-  idVideo: [{
-    type : Schema.Types.ObjectId,
-    ref : 'youtube'
-  }],
   listAccountUsed : [String],
   subStart : Number,
   subOder : Number,
@@ -20,7 +16,6 @@ const channelSchema = new Schema({
   currentSub: Number,
   performance : Number,
   maxThread : Number
-
 },
 {
     timestamps : true,
@@ -29,4 +24,4 @@ const channelSchema = new Schema({
 );
 
 
-module.exports = mongoose.model(Itemdocument, accountSchema)
+module.exports = mongoose.model(Itemdocument, channelSchema)

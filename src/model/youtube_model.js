@@ -9,10 +9,7 @@ const ItemCollection = 'youtubes'
 const youtubeSchema = new Schema({
   idVideo : String,
   title : String,
-  idChannel : [{
-    type : Schema.Types.ObjectId,
-    ref : 'youtube'
-  }],
+  idChannel : String,
   status : Number
 },
 {
