@@ -15,7 +15,8 @@ const channelSchema = new Schema({
   runned : Number,
   currentSub: Number,
   performance : Number,
-  maxThread : Number
+  maxThread : Number,
+  countVideo : Number
 },
 {
     timestamps : true,

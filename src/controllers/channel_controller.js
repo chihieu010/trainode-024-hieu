@@ -3,22 +3,19 @@ const { OK_SUCCESS } = require('../apps/core/success_response');
 const { getKey } = require('../apps/db/keyApiV3');
 const ChannelService = require('../services/channel_service')
 const { channelId, videoId } = require("@gonetone/get-youtube-id-by-url");
+const { getSubcribeCurrent } = require("../apps/utils/current_get_subcribe");
+
 
 
 class ChannelController {
     order = async (req, res, next) => {
         let {link, ordering, limit, maxThread} = req.query;
-
-        let idChannel = await channelId(link);
-        
-        const linkInfoChannel = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${idChannel}&key=${getKey()}`
-        let response = await axios.get(linkInfoChannel);
-        let infoChannel = response.data;
-        let subscriberCount = infoChannel.items[0].statistics.subscriberCount;
-        let channel = await ChannelService.order(link, ordering, limit, maxThread, idChannel, subscriberCount);
+        let idChannel = await channelId(link);     
+        const subscriberCount = await getSubcribeCurrent(idChannel)
+        let channel = await ChannelService.order({link, ordering, limit, maxThread, idChannel, subscriberCount});
         new OK_SUCCESS({
             message: 'them thanh cong',
-            meataData: {link, ordering, limit, maxThread,subscriberCount}
+            meataData: channel
         }).send(res)
     }
   

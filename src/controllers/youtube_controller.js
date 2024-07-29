@@ -35,7 +35,7 @@ class YoutubeController {
     finish = async(req, res, next) =>{
         const{idVideo} = req.params;
         if (!idVideo) throw new Error("not find with idChannel");
-        await YoutubeService.updateStatusWithIdVideo(idVideo,0)
+        const video = await YoutubeService.updateStatusWithIdVideo(idVideo,0)
         new OK_SUCCESS({
             message: "update thanh cong",
             meataData : {}
