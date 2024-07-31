@@ -13,15 +13,17 @@ class YoutubeService {
   findByIdChannel = async (idChannel) => {
     return await youtubeModel.findOne({ idChannel, status: 0 });
   };
+  deleteVideoByIdchannel = async (idChannel) => {
+    return await youtubeModel.deleteMany()
+  };
+  findByIdVideo = async (idVideo) => {
+    return await youtubeModel.findOne({ idVideo });
+  };
   updateStatusWithId = async (id, status) => {
     return await youtubeModel.findByIdAndUpdate(id, { status });
   };
   updateStatusWithIdVideo = async (idVideo, status) => {
-    await youtubeModel.updateOne({ idVideo, status });
-    const video = await youtubeModel.findOne({ idVideo });
-    const subscriberCount = await getSubcribeCurrent(video.idChannel)
-    // await ChannelService.updateCurrentSubcribe(video.idChannel,1382)
-    // await ChannelService.updateRunned(video.idChannel)
+    await youtubeModel.findOneAndUpdate({idVideo}, {status})
     return;
 
   };

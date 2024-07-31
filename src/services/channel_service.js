@@ -1,26 +1,24 @@
 const { channelId, videoId } = require("@gonetone/get-youtube-id-by-url");
-const axios = require("axios");
 const channelModel = require("../model/channels_model");
-const YoutubeService = require('../services/youtube_service');
 const youtube_model = require("../model/youtube_model");
 
 class ChannelService {
     order = async ({link, ordering, limit = 15, maxThread, idChannel, subscriberCount}) => {
-          let count =  await YoutubeService.createWithLinkChannel({link,limit,idChannel})
+          
           let channel = await channelModel.create({
             linkOder : link,
             uidChannel : idChannel,
             subOder : ordering,
             currentSub : subscriberCount,
             subStart : subscriberCount,
-            maxThread : maxThread,
-            countVideo :count
+            maxThread : maxThread
+      
           });
          
-          return channel;
+          return null;
         }
     findByIdChannel = async (idChannel) => {
-        return await channelModel.findOne({idChannel});
+        return await channelModel.findOne({uidChannel : idChannel});
     };
 
     delete = async (id) => {
@@ -37,16 +35,28 @@ class ChannelService {
 
       };
     updateCurrentSubcribe = async(idChannel , subscriberCount) =>{
-      let channel = await channelModel.findOneAndUpdate({uidChannel : idChannel}, {currentSub : subscriberCount})
-      if(channel.subStart + channel.subOder >= channel.currentSub){
-        this.deleteChannel(idChannel)
-      }
+      return await channelModel.findOneAndUpdate({uidChannel : idChannel}, {currentSub : subscriberCount})
     }
     updateRunned = async(idChannel) =>{
       await channelModel.findOneAndUpdate({uidChannel : idChannel}, {$inc : {
         runned : 1
       }}) 
     }
+    updateMaxthread = async(idChannel,used) =>{
+      await channelModel.findOneAndUpdate({uidChannel : idChannel}, {
+        $inc : {
+          maxThreadUsed : used
+      }}) 
+    }
+    updateUsername = async(idChannel,username) =>{
+      await channelModel.findOneAndUpdate({uidChannel : idChannel}, {
+        $push : {
+          listAccountUsed : username
+        }
+      }) 
+    }
+   
+
 
 }
 module.exports = new ChannelService();
